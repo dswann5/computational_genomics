@@ -48,6 +48,9 @@ class ProteinIdentity:
         if self.curr_prot[1] == len(self.protein) - 1 and self.curr_poss[1] == len(self.poss) - 1:
             self.right_end = True
 
+    def __substitution(self, first, second):
+        
+
 class PQueue:
  
     pqueue = Queue.PriorityQueue()
@@ -58,5 +61,15 @@ class PQueue:
         for prot in read_proteins:
             temp = "$" + prot + "#"
             prelim_score = x.score_sequence(temp)
-
+        self.blossum = {}
+        with open("blosum.txt", 'r') as f:
+            lines = f.read().splitlines()
+        columns = lines.pop(0).split()
+        for line in lines:
+            values = line.split()
+            key = values.pop(0)
+            for i in range(len(columns)):
+                self.blossum[key+columns[i]] = int(values[i])
    
+    def __substitution(self, first, second):
+        return -self.blossum[first+second] #make it negative as lower values in PQueue are first
