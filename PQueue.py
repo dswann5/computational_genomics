@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import pickle, random
+import pickle, random, Queue
 
 class ProteinIdentity:
     def __init__(self, protein, poss, curr_prot, curr_poss, score):
@@ -47,10 +47,16 @@ class ProteinIdentity:
     def __at_right_end(self):
         if self.curr_prot[1] == len(self.protein) - 1 and self.curr_poss[1] == len(self.poss) - 1:
             self.right_end = True
+
 class PQueue:
-    
-    def __init__(self, proteins, scheme):
+ 
+    pqueue = Queue.PriorityQueue()
+
+    def __init__(self, read_proteins, scheme):
+
         x = pickle.load(open(scheme,'r'))
-        for prot in proteins:
+        for prot in read_proteins:
             temp = "$" + prot + "#"
             prelim_score = x.score_sequence(temp)
+
+   
