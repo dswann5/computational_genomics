@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import sys, argparse, fileinput, math, collections, re
+import sys, argparse, fileinput, math, collections, re, GUtils
 from collections import defaultdict
+#from GUtils import GUtils
 
 class FreqScore:
     """
@@ -30,13 +31,15 @@ class FreqScore:
         self.__create_dict(possible_comb, size)
 
         #creates a list of proteins
-        self.protein_list = self.__assemble_proteins(filename)
+        self.protein_list = GUtils.read_fasta(filename)
+        #self.protein_list = self.__assemble_proteins(filename)
 
         #count the proteins probabilities and create word dictionary
         j = 0
         for protein in self.protein_list:
             self.__count_protein(size, adjacency, protein)
             self.__disect_words(protein, j, word_size)
+            j += 1
         
         #smoothing protein counts
         for x in self.counts:
@@ -68,7 +71,7 @@ class FreqScore:
             
     def __create_key(self, first, second):
         return first + "-" + second
-    
+    """
     def __assemble_proteins(self, filename):
         protein_list = []
         with open(filename, 'r') as f:
@@ -83,7 +86,7 @@ class FreqScore:
                 curr_protein += line
         protein_list.append(curr_protein)
         return protein_list
-    
+    """
     def __count_protein(self, size, adj, protein):
         protein = "$" + protein + "#"
         for i in range(len(protein) - (2*size + adj) +1):
@@ -93,12 +96,15 @@ class FreqScore:
             self.indiv_counts[start] +=1
     
     def __disect_words(self, protein, index, word_size):
-        for i in len(protein)-word_size:
-            self.word_dict[protein[i:i+word_size]].append((j,i))
+        for i in range(len(protein)-word_size):
+            self.word_dict[protein[i:i+word_size]].append((index,i))
         
     
     def print_prot(self):
         print self.counts
+        
+    def print_index(self):
+        print self.word_dict;
         
     def obtain_proteins(self, word):
         y = []
