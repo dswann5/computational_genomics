@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import numpy, sys
+import sys
         
 def main(argv):
     blossum = {}
